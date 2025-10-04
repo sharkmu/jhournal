@@ -1,37 +1,27 @@
 package main
 
 import (
-	"github.com/rivo/tview"
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/container"
+
+	"github.com/sharkmu/jhournal/tabs"
 )
 
 func main() {
-	app := tview.NewApplication()
-	list := tview.NewList().
-		AddItem("Add", "Record a new entry", 'a', func() {
-			addEntry()
-		}).
-		AddItem("View entries", "See all your previous journal entries", 'v', func() {
-			listEntries()
-		}).
-		AddItem("Settings", "Open settings, to configure your configurations", 's', func() {
-			openSettings()
-		}).
-		AddItem("Quit", "Press to exit", 'q', func() {
-			app.Stop()
-		})
-	if err := app.SetRoot(list, true).SetFocus(list).Run(); err != nil {
-		panic(err)
-	}
-}
+	a := app.New()
+	w := a.NewWindow("Jhournal")
+	w.Resize(fyne.NewSize(800, 600))
+	w.CenterOnScreen()
 
-func addEntry() {
-	println("TODO")
-}
+	tabs := container.NewAppTabs(
+		container.NewTabItem("New entry", tabs.NewEntry()),
+		container.NewTabItem("View entries", tabs.ViewEntries()),
+		container.NewTabItem("Settings", tabs.OpenSettings()),
+	)
 
-func listEntries() {
-	println("TODO")
-}
+	tabs.SetTabLocation(container.TabLocationLeading)
 
-func openSettings() {
-	println("TODO")
+	w.SetContent(tabs)
+	w.ShowAndRun()
 }
