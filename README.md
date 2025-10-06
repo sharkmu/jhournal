@@ -25,7 +25,7 @@
 **Jhournal** is a kind of journal that only lets you write a short (77 character) entry every hour.
 It is written entirely in [Go](https://go.dev/) with [Fyne](https://fyne.io/), a cross-platform GUI toolkit.
 
-## Usage
+## Features
 > Note: This project is still a ***WIP***, so some features may not work properly or at all.
 
 There are 3 tabs on the left side of the window.
