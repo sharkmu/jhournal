@@ -11,7 +11,7 @@
       <img src="https://goreportcard.com/badge/github.com/sharkmu/jhournal" />
    </a>
    <a href="https://github.com/sharkmu/jhournal/blob/master/LICENSE">
-      <img alt="GitHub" src="https://img.shields.io/github/license/sharkmu/jhournal"/>
+      <img alt="GitHub License" src="https://img.shields.io/github/license/sharkmu/jhournal?cacheSeconds=1">
    </a>
    <br/> 
    <a href="https://github.com/sharkmu/jhournal/issues">
