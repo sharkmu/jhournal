@@ -2,7 +2,10 @@ module github.com/sharkmu/jhournal
 
 go 1.25.1
 
-require fyne.io/fyne/v2 v2.6.3
+require (
+	fyne.io/fyne/v2 v2.6.3
+	github.com/joho/godotenv v1.5.1
+)
 
 require (
 	fyne.io/systray v1.11.0 // indirect

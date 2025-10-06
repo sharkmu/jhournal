@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	a := app.New()
+	a := app.NewWithID("com.sharkmu.jhournal")
 	w := a.NewWindow("Jhournal")
 	w.Resize(fyne.NewSize(800, 600))
 	w.CenterOnScreen()
@@ -17,7 +17,7 @@ func main() {
 	tabs := container.NewAppTabs(
 		container.NewTabItem("New entry", tabs.NewEntry()),
 		container.NewTabItem("View entries", tabs.ViewEntries()),
-		container.NewTabItem("Settings", tabs.OpenSettings()),
+		container.NewTabItem("Settings", tabs.OpenSettings(w)),
 	)
 
 	tabs.SetTabLocation(container.TabLocationLeading)
