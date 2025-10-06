@@ -15,8 +15,8 @@ func main() {
 	w.CenterOnScreen()
 
 	tabs := container.NewAppTabs(
-		container.NewTabItem("New entry", tabs.NewEntry()),
-		container.NewTabItem("View entries", tabs.ViewEntries()),
+		container.NewTabItem("New Entry", tabs.NewEntry()),
+		container.NewTabItem("View Entries", tabs.ViewEntries()),
 		container.NewTabItem("Settings", tabs.OpenSettings(w)),
 	)
 
