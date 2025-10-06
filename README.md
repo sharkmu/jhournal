@@ -1,4 +1,6 @@
-# Jhournal
+<div align="center">
+   <img src="banner.png" width="67%"> <!--67 haha-->
+</div>
 
 <p align="center">
    The hourly journal.
