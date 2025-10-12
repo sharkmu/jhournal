@@ -106,13 +106,28 @@ func NewEntry() fyne.CanvasObject {
 func readJson() ([]Data, string) {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file", err)
 	}
 	jsonPath := os.Getenv("JSON_FILE_PATH")
 
 	fileData, err := os.ReadFile(jsonPath)
 	if err != nil {
-		log.Fatal("Unable to read JSON file")
+		if os.IsNotExist(err) {
+			file, createErr := os.Create(jsonPath)
+			if createErr != nil {
+				log.Fatal("Error creating JSON file:", createErr)
+			}
+			defer file.Close()
+
+			_, writeErr := file.Write([]byte("[]"))
+			if writeErr != nil {
+				log.Fatal("Error initialising JSON content:", writeErr)
+			}
+
+			fileData = []byte("[]")
+		} else {
+			log.Fatal("Unable to read JSON file:", err)
+		}
 	}
 
 	var d []Data
@@ -136,7 +151,7 @@ func writeJson(d []Data, jsonPath string, text string) {
 
 	b, err := json.MarshalIndent(d, "", "  ")
 	if err != nil {
-		log.Fatal("Unable to marshal new data")
+		log.Fatal("Unable to marshal new data", err)
 	}
 
 	err = os.WriteFile(jsonPath, b, 0644)
