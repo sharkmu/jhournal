@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -108,7 +109,7 @@ func readJson() ([]Data, string) {
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
-	jsonPath := os.Getenv("JSON_FOLDER_PATH")
+	jsonPath := filepath.Join(os.Getenv("JSON_FOLDER_PATH"), "data.json")
 
 	fileData, err := os.ReadFile(jsonPath)
 	if err != nil {
