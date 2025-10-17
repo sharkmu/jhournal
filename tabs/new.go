@@ -108,7 +108,7 @@ func readJson() ([]Data, string) {
 	if err != nil {
 		log.Fatal("Error loading .env file", err)
 	}
-	jsonPath := os.Getenv("JSON_FILE_PATH")
+	jsonPath := os.Getenv("JSON_FOLDER_PATH")
 
 	fileData, err := os.ReadFile(jsonPath)
 	if err != nil {

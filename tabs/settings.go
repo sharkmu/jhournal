@@ -14,19 +14,18 @@ import (
 func OpenSettings(w fyne.Window) fyne.CanvasObject {
 	title := widget.NewLabelWithStyle("Settings", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 
-	pathLabel := widget.NewLabel("JSON location: ")
+	pathLabel := widget.NewLabel("JSON's folder location: ")
 
 	pathEntry := widget.NewEntry()
 	pathEntry.SetPlaceHolder("Nothing selected")
 
 	browseBtn := widget.NewButton("Browse", func() {
-		fd := dialog.NewFileOpen(func(r fyne.URIReadCloser, err error) {
+		fd := dialog.NewFolderOpen(func(r fyne.ListableURI, err error) {
 			if r == nil {
 				return
 			}
-			defer r.Close()
-			saveToEnv(r.URI().Path())
-			pathEntry.SetText(r.URI().Path())
+			saveToEnv(r.Path())
+			pathEntry.SetText(r.Path())
 		}, w)
 		fd.Show()
 	})
@@ -38,7 +37,7 @@ func OpenSettings(w fyne.Window) fyne.CanvasObject {
 
 func saveToEnv(filepath string) {
 	env := map[string]string{
-		"JSON_FILE_PATH": filepath,
+		"JSON_FOLDER_PATH": filepath,
 	}
 
 	err := godotenv.Write(env, "./.env")
