@@ -106,11 +106,15 @@ func NewEntry() fyne.CanvasObject {
 }
 
 func readJson() ([]Data, string) {
-	envPath := filepath.Join(utils.GetConfigDir(), ".env")
+	configPath, err := utils.GetConfigDir()
+	if err != nil {
+		log.Fatal("Unable to get config directory:", err)
+	}
+	envPath := filepath.Join(configPath, ".env")
 
-	_, err := os.Stat(envPath)
+	_, err = os.Stat(envPath)
 	if os.IsNotExist(err) {
-		SaveToEnv(utils.GetConfigDir())
+		SaveToEnv(configPath)
 	} else if err != nil {
 		log.Fatal("Error checking .env file:", err)
 	} else {

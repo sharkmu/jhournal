@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func GetConfigDir() string {
+func GetConfigDir() (string, error) {
 	configRoot, err := os.UserConfigDir()
 	if err != nil {
 		log.Fatal("Unable to get user config directory:", err)
@@ -14,5 +14,5 @@ func GetConfigDir() string {
 
 	configDir := filepath.Join(configRoot, "jhournal")
 	os.MkdirAll(configDir, 0755)
-	return configDir
+	return configDir, nil
 }
