@@ -33,6 +33,7 @@ func ViewEntries() fyne.CanvasObject {
 				"ID: %d \nTime: %s\n\n------\n\n%s", d.Id,
 				d.Time.Format("Monday, 2006-01-02 15:04:05"), d.Content),
 			)
+			display.Wrapping = fyne.TextWrapWord
 		}
 
 		split := container.NewHSplit(listWidget, display)
