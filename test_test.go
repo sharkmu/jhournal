@@ -23,21 +23,28 @@ func TestTabs(t *testing.T) {
 	w := test.NewWindow(nil)
 	defer w.Close()
 
-	newEntry := tabs.NewEntry()
-	viewEntries := tabs.ViewEntries()
-	settings := tabs.OpenSettings(w)
+	var viewTab *container.TabItem
 
-	if newEntry == nil || viewEntries == nil || settings == nil {
+	refreshView := func() {
+		viewTab.Content = tabs.ViewEntries()
+	}
+
+	newTab := container.NewTabItem("New Entry", tabs.NewEntry(refreshView))
+
+	viewTab = container.NewTabItem("View Entries", tabs.ViewEntries())
+
+	settingsTab := container.NewTabItem("Settings", tabs.OpenSettings(w))
+
+	tabsContainer := container.NewAppTabs(newTab, viewTab, settingsTab)
+	tabsContainer.SetTabLocation(container.TabLocationLeading)
+
+	if newTab == nil || viewTab == nil || settingsTab == nil {
 		t.Fatal("One or more tabs are nil")
 	}
 
-	tabsContent := container.NewAppTabs(
-		container.NewTabItem("New Entry", newEntry),
-		container.NewTabItem("View Entries", viewEntries),
-		container.NewTabItem("Settings", settings),
-	)
+	w.SetContent(tabsContainer)
 
-	if tabsContent == nil {
+	if tabsContainer == nil {
 		t.Fatal("AppTabs creation failed")
 	}
 }
