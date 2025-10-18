@@ -5,7 +5,48 @@ on:
     types: [created]
 
 jobs:
-  build:
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.25.1'
+
+      - name: Build Windows executable
+        run: go build -ldflags="-s -w -H=windowsgui" -o jhournal.exe .
+
+      - name: Upload Windows release asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: jhournal.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.25.1'
+
+      - name: Build macOS executable
+        run: go build -o jhournal-mac .
+
+      - name: Upload macOS release asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: jhournal-mac
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-linux:
+    name: Build Linux
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -14,21 +55,12 @@ jobs:
         with:
           go-version: '1.25.1'
 
-      - name: Build Windows
-        run: GOOS=windows GOARCH=amd64 go build -ldflags="-s -w -H=windowsgui" -o jhournal.exe .
+      - name: Build Linux executable
+        run: go build -o jhournal-linux .
 
-      - name: Build macOS
-        run: GOOS=darwin GOARCH=amd64 go build -o jhournal-mac .
-
-      - name: Build Linux
-        run: GOOS=linux GOARCH=amd64 go build -o jhournal-linux .
-
-      - name: Upload Release Assets
+      - name: Upload Linux release asset
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            jhournal.exe
-            jhournal-mac
-            jhournal-linux
+          files: jhournal-linux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
