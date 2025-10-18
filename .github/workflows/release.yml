@@ -1,5 +1,5 @@
 name: Build and Release
-permissions: 
+permissions:
   contents: write
   packages: write
 
@@ -56,15 +56,20 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: '1.25.1'
+
       - name: Install dependencies
         run: |
-            sudo apt-get update
-            sudo apt-get install -y \
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            xorg-dev \
             libgl1-mesa-dev \
             libxrandr-dev \
-            libxxf86vm-dev \
+            libxcursor-dev \
             libxi-dev \
-            libxcursor-dev
+            libxinerama-dev \
+            libxxf86vm-dev
+
       - name: Build Linux executable
         run: go build -o jhournal-linux .
 
