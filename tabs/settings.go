@@ -47,7 +47,7 @@ func OpenSettings(w fyne.Window) fyne.CanvasObject {
 			if r == nil {
 				return
 			}
-			SaveToEnv(r.Path())
+			utils.SaveToEnv(r.Path())
 			pathEntry.SetText(r.Path())
 		}, w)
 		fd.Show()
@@ -56,20 +56,4 @@ func OpenSettings(w fyne.Window) fyne.CanvasObject {
 	pathBox := container.NewVBox(pathLabel, pathEntry, browseBtn)
 
 	return container.NewVBox(title, pathBox)
-}
-
-func SaveToEnv(folderpath string) {
-	env := map[string]string{
-		"JSON_FOLDER_PATH": folderpath,
-	}
-
-	configPath, err := utils.GetConfigDir()
-	if err != nil {
-		log.Fatal("Unable to get config directory:", err)
-	}
-
-	err = godotenv.Write(env, filepath.Join(configPath, ".env"))
-	if err != nil {
-		log.Fatal("Unable to write .env: ", err)
-	}
 }
