@@ -14,6 +14,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/joho/godotenv"
+	"github.com/sharkmu/jhournal/utils"
 )
 
 type Data struct {
@@ -105,10 +106,20 @@ func NewEntry() fyne.CanvasObject {
 }
 
 func readJson() ([]Data, string) {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file", err)
+	envPath := filepath.Join(utils.GetConfigDir(), ".env")
+
+	_, err := os.Stat(envPath)
+	if os.IsNotExist(err) {
+		SaveToEnv(utils.GetConfigDir())
+	} else if err != nil {
+		log.Fatal("Error checking .env file:", err)
+	} else {
+		err := godotenv.Load(envPath)
+		if err != nil {
+			log.Fatal("Error loading .env file:", err)
+		}
 	}
+
 	jsonPath := filepath.Join(os.Getenv("JSON_FOLDER_PATH"), "data.json")
 
 	fileData, err := os.ReadFile(jsonPath)

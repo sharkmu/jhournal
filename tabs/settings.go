@@ -2,8 +2,10 @@ package tabs
 
 import (
 	"log"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
+	"github.com/sharkmu/jhournal/utils"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -24,7 +26,7 @@ func OpenSettings(w fyne.Window) fyne.CanvasObject {
 			if r == nil {
 				return
 			}
-			saveToEnv(r.Path())
+			SaveToEnv(r.Path())
 			pathEntry.SetText(r.Path())
 		}, w)
 		fd.Show()
@@ -35,12 +37,11 @@ func OpenSettings(w fyne.Window) fyne.CanvasObject {
 	return container.NewVBox(title, pathBox)
 }
 
-func saveToEnv(filepath string) {
+func SaveToEnv(folderpath string) {
 	env := map[string]string{
-		"JSON_FOLDER_PATH": filepath,
+		"JSON_FOLDER_PATH": folderpath,
 	}
-
-	err := godotenv.Write(env, "./.env")
+	err := godotenv.Write(env, filepath.Join(utils.GetConfigDir(), ".env"))
 	if err != nil {
 		log.Fatal("Unable to write .env: ", err)
 	}
