@@ -14,14 +14,21 @@ func main() {
 	w.Resize(fyne.NewSize(800, 600))
 	w.CenterOnScreen()
 
-	tabs := container.NewAppTabs(
-		container.NewTabItem("New Entry", tabs.NewEntry()),
-		container.NewTabItem("View Entries", tabs.ViewEntries()),
-		container.NewTabItem("Settings", tabs.OpenSettings(w)),
-	)
+	var viewTab *container.TabItem
 
-	tabs.SetTabLocation(container.TabLocationLeading)
+	refreshView := func() {
+		viewTab.Content = tabs.ViewEntries()
+	}
 
-	w.SetContent(tabs)
+	newTab := container.NewTabItem("New Entry", tabs.NewEntry(refreshView))
+
+	viewTab = container.NewTabItem("View Entries", tabs.ViewEntries())
+
+	settingsTab := container.NewTabItem("Settings", tabs.OpenSettings(w))
+
+	tabsContainer := container.NewAppTabs(newTab, viewTab, settingsTab)
+	tabsContainer.SetTabLocation(container.TabLocationLeading)
+
+	w.SetContent(tabsContainer)
 	w.ShowAndRun()
 }
