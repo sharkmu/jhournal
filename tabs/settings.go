@@ -11,6 +11,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -61,5 +62,25 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 
 	pathBox := container.NewVBox(pathLabel, pathInput, browseBtn)
 
-	return container.NewVBox(title, pathBox)
+	sizeLabel := widget.NewLabel("Window's size")
+
+	sizeLabelH := widget.NewLabel("Height:")
+	sizeEntryH := widget.NewEntry()
+	sizeEntryHContainer := container.New(
+		layout.NewGridWrapLayout(fyne.NewSize(50, sizeEntryH.MinSize().Height)),
+		sizeEntryH,
+	)
+
+	sizeLabelW := widget.NewLabel("Width:")
+	sizeEntryW := widget.NewEntry()
+	sizeEntryWContainer := container.New(
+		layout.NewGridWrapLayout(fyne.NewSize(50, sizeEntryW.MinSize().Height)),
+		sizeEntryW,
+	)
+
+	sizeEntries := container.NewHBox(sizeLabelH, sizeEntryHContainer, sizeLabelW, sizeEntryWContainer)
+
+	sizeBox := container.NewVBox(sizeLabel, sizeEntries)
+
+	return container.NewVBox(title, pathBox, sizeBox)
 }
