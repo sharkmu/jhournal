@@ -26,13 +26,10 @@ func ReadJson() ([]Data, string) {
 	_, err = os.Stat(envPath)
 	if os.IsNotExist(err) {
 		SaveToEnv(configPath)
-	} else if err != nil {
-		log.Fatal("Error checking .env file:", err)
-	} else {
-		err := godotenv.Overload(envPath)
-		if err != nil {
-			log.Fatal("Error loading .env file:", err)
-		}
+	}
+	err = godotenv.Overload(envPath)
+	if err != nil {
+		log.Fatal("Error loading .env file:", err)
 	}
 
 	jsonPath := filepath.Join(os.Getenv("JSON_FOLDER_PATH"), "data.json")
