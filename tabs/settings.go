@@ -14,7 +14,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func OpenSettings(w fyne.Window) fyne.CanvasObject {
+func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 	title := widget.NewLabelWithStyle("Settings", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 
 	pathLabel := widget.NewLabel("JSON's folder location: ")
@@ -42,6 +42,7 @@ func OpenSettings(w fyne.Window) fyne.CanvasObject {
 
 	saveBtn := widget.NewButton("Save", func() {
 		utils.SaveToEnv(pathEntry.Text)
+		onSaved("view")
 	})
 
 	pathInput := container.NewBorder(nil, nil, nil, saveBtn, pathEntry)
@@ -53,6 +54,7 @@ func OpenSettings(w fyne.Window) fyne.CanvasObject {
 			}
 			utils.SaveToEnv(r.Path())
 			pathEntry.SetText(r.Path())
+			onSaved("view")
 		}, w)
 		fd.Show()
 	})

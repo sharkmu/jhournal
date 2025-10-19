@@ -29,7 +29,7 @@ func main() {
 		case "view":
 			viewTab.Content = tabs.ViewEntries()
 		case "settings":
-			settingsTab.Content = tabs.OpenSettings(w)
+			settingsTab.Content = tabs.OpenSettings(w, refreshTab)
 		default:
 			log.Fatal("No such tab to refresh", tabName)
 		}
@@ -39,7 +39,7 @@ func main() {
 
 	viewTab = container.NewTabItem("View Entries", tabs.ViewEntries())
 
-	settingsTab = container.NewTabItem("Settings", tabs.OpenSettings(w))
+	settingsTab = container.NewTabItem("Settings", tabs.OpenSettings(w, refreshTab))
 
 	tabsContainer := container.NewAppTabs(newTab, viewTab, settingsTab)
 	tabsContainer.SetTabLocation(container.TabLocationLeading)
