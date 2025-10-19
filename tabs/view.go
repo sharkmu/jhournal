@@ -11,14 +11,14 @@ import (
 
 func ViewEntries() fyne.CanvasObject {
 	var content fyne.CanvasObject
-
 	if utils.LenJson() > 0 {
+		jsonLength := utils.LenJson()
 		entries, _ := utils.ReadJson()
 
 		display := widget.NewLabel("Choose an entry from the list")
 
 		listWidget := widget.NewList(
-			func() int { return utils.LenJson() },
+			func() int { return jsonLength },
 			func() fyne.CanvasObject { return widget.NewLabel("") },
 			func(i widget.ListItemID, o fyne.CanvasObject) {
 				d := entries[i]
