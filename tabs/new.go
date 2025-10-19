@@ -64,6 +64,7 @@ func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 					)
 					warning2.Refresh()
 					warning2Status = true
+					return
 				}
 			} else {
 				utils.WriteJson(d, jsonPath, entry.Text)
