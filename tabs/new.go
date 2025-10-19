@@ -18,7 +18,7 @@ type Data struct {
 	Time    time.Time
 }
 
-func NewEntry(onSaved func()) fyne.CanvasObject {
+func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 	title := widget.NewLabelWithStyle("New Entry", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 
 	warning1 := canvas.NewText("", color.RGBA{R: 255, G: 0, B: 0, A: 255})
@@ -69,7 +69,7 @@ func NewEntry(onSaved func()) fyne.CanvasObject {
 				utils.WriteJson(d, jsonPath, entry.Text)
 				clearWarnings()
 			}
-			onSaved()
+			onSaved("view")
 		}
 	})
 
