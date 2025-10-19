@@ -42,7 +42,7 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 	}
 
 	saveBtn := widget.NewButton("Save", func() {
-		utils.SaveToEnv(pathEntry.Text)
+		utils.SaveJsonToEnv(pathEntry.Text)
 		onSaved("view")
 	})
 
@@ -53,7 +53,7 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 			if r == nil {
 				return
 			}
-			utils.SaveToEnv(r.Path())
+			utils.SaveJsonToEnv(r.Path())
 			pathEntry.SetText(r.Path())
 			onSaved("view")
 		}, w)
@@ -78,7 +78,12 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 		sizeEntryW,
 	)
 
-	sizeEntries := container.NewHBox(sizeLabelH, sizeEntryHContainer, sizeLabelW, sizeEntryWContainer)
+	sizeEmptySpace := widget.NewLabel("")
+
+	sizeSaveBtn := widget.NewButton("Save", func() {
+		utils.SaveSizeToEnv(sizeEntryH.Text, sizeEntryW.Text)
+	})
+	sizeEntries := container.NewHBox(sizeLabelH, sizeEntryHContainer, sizeLabelW, sizeEntryWContainer, sizeEmptySpace, sizeSaveBtn)
 
 	sizeBox := container.NewVBox(sizeLabel, sizeEntries)
 
