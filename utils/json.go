@@ -29,7 +29,7 @@ func ReadJson() ([]Data, string) {
 	} else if err != nil {
 		log.Fatal("Error checking .env file:", err)
 	} else {
-		err := godotenv.Load(envPath)
+		err := godotenv.Overload(envPath)
 		if err != nil {
 			log.Fatal("Error loading .env file:", err)
 		}
