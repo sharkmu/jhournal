@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/joho/godotenv"
 	"github.com/sharkmu/jhournal/utils"
@@ -82,6 +83,18 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 
 	sizeSaveBtn := widget.NewButton("Save", func() {
 		utils.SaveSizeToEnv(sizeEntryH.Text, sizeEntryW.Text)
+
+		sizeWf64, err := strconv.ParseFloat(sizeEntryW.Text, 32)
+		if err != nil {
+			utils.DisplayError(fmt.Errorf("error: %w", err))
+		}
+
+		sizeHf64, err := strconv.ParseFloat(sizeEntryH.Text, 32)
+		if err != nil {
+			utils.DisplayError(fmt.Errorf("error: %w", err))
+		}
+
+		w.Resize(fyne.NewSize(float32(sizeWf64), float32(sizeHf64)))
 	})
 	sizeEntries := container.NewHBox(sizeLabelH, sizeEntryHContainer, sizeLabelW, sizeEntryWContainer, sizeEmptySpace, sizeSaveBtn)
 
