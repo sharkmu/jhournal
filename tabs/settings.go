@@ -65,13 +65,6 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 
 	sizeLabel := widget.NewLabel("Window's size")
 
-	sizeLabelH := widget.NewLabel("Height:")
-	sizeEntryH := widget.NewEntry()
-	sizeEntryHContainer := container.New(
-		layout.NewGridWrapLayout(fyne.NewSize(50, sizeEntryH.MinSize().Height)),
-		sizeEntryH,
-	)
-
 	sizeLabelW := widget.NewLabel("Width:")
 	sizeEntryW := widget.NewEntry()
 	sizeEntryWContainer := container.New(
@@ -79,10 +72,17 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 		sizeEntryW,
 	)
 
+	sizeLabelH := widget.NewLabel("Height:")
+	sizeEntryH := widget.NewEntry()
+	sizeEntryHContainer := container.New(
+		layout.NewGridWrapLayout(fyne.NewSize(50, sizeEntryH.MinSize().Height)),
+		sizeEntryH,
+	)
+
 	sizeEmptySpace := widget.NewLabel("")
 
 	sizeSaveBtn := widget.NewButton("Save", func() {
-		utils.SaveSizeToEnv(sizeEntryH.Text, sizeEntryW.Text)
+		utils.SaveSizeToEnv(sizeEntryW.Text, sizeEntryH.Text)
 
 		sizeWf64, err := strconv.ParseFloat(sizeEntryW.Text, 32)
 		if err != nil {
@@ -96,7 +96,7 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 
 		w.Resize(fyne.NewSize(float32(sizeWf64), float32(sizeHf64)))
 	})
-	sizeEntries := container.NewHBox(sizeLabelH, sizeEntryHContainer, sizeLabelW, sizeEntryWContainer, sizeEmptySpace, sizeSaveBtn)
+	sizeEntries := container.NewHBox(sizeLabelW, sizeEntryWContainer, sizeLabelH, sizeEntryHContainer, sizeEmptySpace, sizeSaveBtn)
 
 	sizeBox := container.NewVBox(sizeLabel, sizeEntries)
 

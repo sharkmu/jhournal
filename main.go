@@ -47,21 +47,21 @@ func getSize() fyne.Size {
 		utils.DisplayError(fmt.Errorf("error loading .env file: %w", err))
 	}
 
-	sizeH := os.Getenv("WINDOW_SIZE_H")
 	sizeW := os.Getenv("WINDOW_SIZE_W")
-	if sizeH == "" {
-		sizeH = "600"
-	}
+	sizeH := os.Getenv("WINDOW_SIZE_H")
 	if sizeW == "" {
 		sizeW = "800"
 	}
+	if sizeH == "" {
+		sizeH = "600"
+	}
 
-	sizeHf64, err := strconv.ParseFloat(sizeH, 32)
+	sizeWf64, err := strconv.ParseFloat(sizeW, 32)
 	if err != nil {
 		utils.DisplayError(fmt.Errorf("error: %w", err))
 	}
 
-	sizeWf64, err := strconv.ParseFloat(sizeW, 32)
+	sizeHf64, err := strconv.ParseFloat(sizeH, 32)
 	if err != nil {
 		utils.DisplayError(fmt.Errorf("error: %w", err))
 	}
