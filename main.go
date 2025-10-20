@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -15,48 +15,26 @@ import (
 	"github.com/sharkmu/jhournal/utils"
 )
 
-func createWindow(wSize fyne.Size) {
+func main() {
 	a := app.NewWithID("com.sharkmu.jhournal")
 	w := a.NewWindow("Jhournal")
-	w.Resize(wSize)
+
 	w.CenterOnScreen()
 
-	var newTab *container.TabItem
-	var viewTab *container.TabItem
-	var settingsTab *container.TabItem
+	w.Show()
 
-	var refreshTab func(tabName string)
+	wSize := getSize()
+	w.Resize(wSize)
 
-	refreshTab = func(tabName string) {
-		switch tabName {
-		case "new":
-			newTab.Content = tabs.NewEntry(refreshTab)
-		case "view":
-			viewTab.Content = tabs.ViewEntries()
-		case "settings":
-			settingsTab.Content = tabs.OpenSettings(w, refreshTab)
-		default:
-			log.Fatal("No such tab to refresh", tabName)
-		}
-	}
+	createTabs(w)
 
-	newTab = container.NewTabItem("New Entry", tabs.NewEntry(refreshTab))
-
-	viewTab = container.NewTabItem("View Entries", tabs.ViewEntries())
-
-	settingsTab = container.NewTabItem("Settings", tabs.OpenSettings(w, refreshTab))
-
-	tabsContainer := container.NewAppTabs(newTab, viewTab, settingsTab)
-	tabsContainer.SetTabLocation(container.TabLocationLeading)
-
-	w.SetContent(tabsContainer)
-	w.ShowAndRun()
+	a.Run()
 }
 
 func getSize() fyne.Size {
 	configPath, err := utils.GetConfigDir()
 	if err != nil {
-		log.Fatal("Unable to get config directory:", err)
+		utils.DisplayError(fmt.Sprintf("Unable to get config directory: %v", err))
 	}
 	envPath := filepath.Join(configPath, ".env")
 
@@ -66,7 +44,7 @@ func getSize() fyne.Size {
 	}
 	err = godotenv.Overload(envPath)
 	if err != nil {
-		log.Fatal("Error loading .env file:", err)
+		utils.DisplayError(fmt.Sprintf("Error loading .env file: %v", err))
 	}
 
 	sizeH := os.Getenv("WINDOW_SIZE_H")
@@ -80,18 +58,40 @@ func getSize() fyne.Size {
 
 	sizeHf64, err := strconv.ParseFloat(sizeH, 32)
 	if err != nil {
-		log.Fatal(err)
+		utils.DisplayError(fmt.Sprintf("Error: %v", err))
 	}
 
 	sizeWf64, err := strconv.ParseFloat(sizeW, 32)
 	if err != nil {
-		log.Fatal(err)
+		utils.DisplayError(fmt.Sprintf("Error: %v", err))
 	}
 
 	return fyne.NewSize(float32(sizeWf64), float32(sizeHf64))
 }
 
-func main() {
-	wSize := getSize()
-	createWindow(wSize)
+func createTabs(w fyne.Window) {
+	var newTab, viewTab, settingsTab *container.TabItem
+	var refreshTab func(tabName string)
+
+	refreshTab = func(tabName string) {
+		switch tabName {
+		case "new":
+			newTab.Content = tabs.NewEntry(refreshTab)
+		case "view":
+			viewTab.Content = tabs.ViewEntries()
+		case "settings":
+			settingsTab.Content = tabs.OpenSettings(w, refreshTab)
+		default:
+			utils.DisplayError(fmt.Sprintf("No such tab to refresh: %v", tabName))
+		}
+	}
+
+	newTab = container.NewTabItem("New Entry", tabs.NewEntry(refreshTab))
+	viewTab = container.NewTabItem("View Entries", tabs.ViewEntries())
+	settingsTab = container.NewTabItem("Settings", tabs.OpenSettings(w, refreshTab))
+
+	tabsContainer := container.NewAppTabs(newTab, viewTab, settingsTab)
+	tabsContainer.SetTabLocation(container.TabLocationLeading)
+
+	w.SetContent(tabsContainer)
 }
