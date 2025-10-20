@@ -2,7 +2,7 @@ package utils
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"os"
 	"path/filepath"
 	"time"
@@ -19,7 +19,7 @@ type Data struct {
 func ReadJson() ([]Data, string) {
 	configPath, err := GetConfigDir()
 	if err != nil {
-		log.Fatal("Unable to get config directory:", err)
+		DisplayError(fmt.Sprintf("Unable to get config directory: %v", err))
 	}
 	envPath := filepath.Join(configPath, ".env")
 
@@ -29,7 +29,7 @@ func ReadJson() ([]Data, string) {
 	}
 	err = godotenv.Overload(envPath)
 	if err != nil {
-		log.Fatal("Error loading .env file:", err)
+		DisplayError(fmt.Sprintf("Error loading .env file: %v", err))
 	}
 
 	jsonPath := filepath.Join(os.Getenv("JSON_FOLDER_PATH"), "data.json")
@@ -39,18 +39,18 @@ func ReadJson() ([]Data, string) {
 		if os.IsNotExist(err) {
 			file, createErr := os.Create(jsonPath)
 			if createErr != nil {
-				log.Fatal("Error creating JSON file:", createErr)
+				DisplayError(fmt.Sprintf("Error creating JSON file: %v", err))
 			}
 			defer file.Close()
 
 			_, writeErr := file.Write([]byte("[]"))
 			if writeErr != nil {
-				log.Fatal("Error initialising JSON content:", writeErr)
+				DisplayError(fmt.Sprintf("Error initialising JSON content: %v", err))
 			}
 
 			fileData = []byte("[]")
 		} else {
-			log.Fatal("Unable to read JSON file:", err)
+			DisplayError(fmt.Sprintf("Unable to read JSON file: %v", err))
 		}
 	}
 
@@ -58,7 +58,7 @@ func ReadJson() ([]Data, string) {
 	if len(fileData) > 0 {
 		err = json.Unmarshal(fileData, &d)
 		if err != nil {
-			log.Fatal("Error parsing JSON:", err)
+			DisplayError(fmt.Sprintf("Error parsing JSON: %v", err))
 		}
 	}
 	return d, jsonPath
@@ -75,12 +75,12 @@ func WriteJson(d []Data, jsonPath string, text string) {
 
 	b, err := json.MarshalIndent(d, "", "  ")
 	if err != nil {
-		log.Fatal("Unable to marshal new data", err)
+		DisplayError(fmt.Sprintf("Unable to marshal new data: %v", err))
 	}
 
 	err = os.WriteFile(jsonPath, b, 0644)
 	if err != nil {
-		log.Fatal("Unable to write JSON file:", err)
+		DisplayError(fmt.Sprintf("Unable to write JSON file: %v", err))
 	}
 }
 

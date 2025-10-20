@@ -1,7 +1,7 @@
 package tabs
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -24,7 +24,7 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 
 	configPath, err := utils.GetConfigDir()
 	if err != nil {
-		log.Fatal("Unable to get config directory:", err)
+		utils.DisplayError(fmt.Sprintf("Unable to get config directory: %v", err))
 	}
 	envPath := filepath.Join(configPath, ".env")
 
@@ -32,11 +32,11 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 	if os.IsNotExist(err) {
 		pathEntry.SetPlaceHolder("Nothing selected")
 	} else if err != nil {
-		log.Fatal("Error checking .env file:", err)
+		utils.DisplayError(fmt.Sprintf("Error checking .env file: %v", err))
 	} else {
 		err := godotenv.Load(envPath)
 		if err != nil {
-			log.Fatal("Error loading .env file:", err)
+			utils.DisplayError(fmt.Sprintf("Error loading .env file: %v", err))
 		}
 		pathEntry.Text = os.Getenv("JSON_FOLDER_PATH")
 	}

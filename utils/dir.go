@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -9,7 +9,7 @@ import (
 func GetConfigDir() (string, error) {
 	configRoot, err := os.UserConfigDir()
 	if err != nil {
-		log.Fatal("Unable to get user config directory:", err)
+		DisplayError(fmt.Sprintf("Unable to get user config directory: %v", err))
 	}
 
 	configDir := filepath.Join(configRoot, "jhournal")

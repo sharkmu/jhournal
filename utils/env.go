@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -13,7 +13,7 @@ func SaveEnvValues(updates map[string]string) {
 	envPath := filepath.Join(configPath, ".env")
 
 	if err != nil {
-		log.Fatal("Unable to get config directory:", err)
+		DisplayError(fmt.Sprintf("Unable to get config directory: %v", err))
 	}
 
 	_, err = os.Stat(envPath)
@@ -21,15 +21,15 @@ func SaveEnvValues(updates map[string]string) {
 	if os.IsNotExist(err) {
 		err := os.WriteFile(envPath, []byte(""), 0644)
 		if err != nil {
-			log.Fatal("Failed to create .env:", err)
+			DisplayError(fmt.Sprintf("Failed to create .env: %v", err))
 		}
 		existing = make(map[string]string)
 	} else if err != nil {
-		log.Fatal("Unable to get data on .env:", err)
+		DisplayError(fmt.Sprintf("Unable to get data on .env: %v", err))
 	} else {
 		existing, err = godotenv.Read(envPath)
 		if err != nil {
-			log.Fatal("Can't read existing .env file:", err)
+			DisplayError(fmt.Sprintf("Can't read existing .env file: %v", err))
 		}
 	}
 
@@ -39,7 +39,7 @@ func SaveEnvValues(updates map[string]string) {
 
 	err = godotenv.Write(existing, envPath)
 	if err != nil {
-		log.Fatal("Unable to write .env:", err)
+		DisplayError(fmt.Sprintf("Unable to write .env: %v", err))
 	}
 }
 
