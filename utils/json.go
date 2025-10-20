@@ -19,7 +19,7 @@ type Data struct {
 func ReadJson() ([]Data, string) {
 	configPath, err := GetConfigDir()
 	if err != nil {
-		DisplayError(fmt.Sprintf("Unable to get config directory: %v", err))
+		DisplayError(fmt.Errorf("unable to get config directory: %w", err))
 	}
 	envPath := filepath.Join(configPath, ".env")
 
@@ -29,7 +29,7 @@ func ReadJson() ([]Data, string) {
 	}
 	err = godotenv.Overload(envPath)
 	if err != nil {
-		DisplayError(fmt.Sprintf("Error loading .env file: %v", err))
+		DisplayError(fmt.Errorf("error loading .env file: %w", err))
 	}
 
 	jsonPath := filepath.Join(os.Getenv("JSON_FOLDER_PATH"), "data.json")
@@ -39,18 +39,18 @@ func ReadJson() ([]Data, string) {
 		if os.IsNotExist(err) {
 			file, createErr := os.Create(jsonPath)
 			if createErr != nil {
-				DisplayError(fmt.Sprintf("Error creating JSON file: %v", err))
+				DisplayError(fmt.Errorf("error creating JSON file: %w", err))
 			}
 			defer file.Close()
 
 			_, writeErr := file.Write([]byte("[]"))
 			if writeErr != nil {
-				DisplayError(fmt.Sprintf("Error initialising JSON content: %v", err))
+				DisplayError(fmt.Errorf("error initialising JSON content: %w", err))
 			}
 
 			fileData = []byte("[]")
 		} else {
-			DisplayError(fmt.Sprintf("Unable to read JSON file: %v", err))
+			DisplayError(fmt.Errorf("unable to read JSON file: %w", err))
 		}
 	}
 
@@ -58,7 +58,7 @@ func ReadJson() ([]Data, string) {
 	if len(fileData) > 0 {
 		err = json.Unmarshal(fileData, &d)
 		if err != nil {
-			DisplayError(fmt.Sprintf("Error parsing JSON: %v", err))
+			DisplayError(fmt.Errorf("error parsing JSON: %w", err))
 		}
 	}
 	return d, jsonPath
@@ -75,12 +75,12 @@ func WriteJson(d []Data, jsonPath string, text string) {
 
 	b, err := json.MarshalIndent(d, "", "  ")
 	if err != nil {
-		DisplayError(fmt.Sprintf("Unable to marshal new data: %v", err))
+		DisplayError(fmt.Errorf("unable to marshal new data: %w", err))
 	}
 
 	err = os.WriteFile(jsonPath, b, 0644)
 	if err != nil {
-		DisplayError(fmt.Sprintf("Unable to write JSON file: %v", err))
+		DisplayError(fmt.Errorf("unable to write JSON file: %w", err))
 	}
 }
 

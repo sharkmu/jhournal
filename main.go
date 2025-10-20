@@ -34,7 +34,7 @@ func main() {
 func getSize() fyne.Size {
 	configPath, err := utils.GetConfigDir()
 	if err != nil {
-		utils.DisplayError(fmt.Sprintf("Unable to get config directory: %v", err))
+		utils.DisplayError(fmt.Errorf("unable to get config directory: %w", err))
 	}
 	envPath := filepath.Join(configPath, ".env")
 
@@ -44,7 +44,7 @@ func getSize() fyne.Size {
 	}
 	err = godotenv.Overload(envPath)
 	if err != nil {
-		utils.DisplayError(fmt.Sprintf("Error loading .env file: %v", err))
+		utils.DisplayError(fmt.Errorf("error loading .env file: %w", err))
 	}
 
 	sizeH := os.Getenv("WINDOW_SIZE_H")
@@ -58,12 +58,12 @@ func getSize() fyne.Size {
 
 	sizeHf64, err := strconv.ParseFloat(sizeH, 32)
 	if err != nil {
-		utils.DisplayError(fmt.Sprintf("Error: %v", err))
+		utils.DisplayError(fmt.Errorf("error: %w", err))
 	}
 
 	sizeWf64, err := strconv.ParseFloat(sizeW, 32)
 	if err != nil {
-		utils.DisplayError(fmt.Sprintf("Error: %v", err))
+		utils.DisplayError(fmt.Errorf("error: %w", err))
 	}
 
 	return fyne.NewSize(float32(sizeWf64), float32(sizeHf64))
@@ -82,7 +82,7 @@ func createTabs(w fyne.Window) {
 		case "settings":
 			settingsTab.Content = tabs.OpenSettings(w, refreshTab)
 		default:
-			utils.DisplayError(fmt.Sprintf("No such tab to refresh: %v", tabName))
+			utils.DisplayError(fmt.Errorf("no such tab to refresh: %v", tabName))
 		}
 	}
 
