@@ -43,8 +43,9 @@ func SaveEnvValues(updates map[string]string) {
 	}
 }
 
-func SaveJsonToEnv(folderpath string) {
+func SaveJsonToEnv(folderpath string) error {
 	SaveEnvValues(map[string]string{"JSON_FOLDER_PATH": folderpath})
+	return nil
 }
 
 func SaveSizeToEnv(sizeH, sizeW string) {
