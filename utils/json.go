@@ -25,7 +25,7 @@ func ReadJson() ([]Data, string) {
 
 	_, err = os.Stat(envPath)
 	if os.IsNotExist(err) {
-		SaveToEnv(configPath)
+		SaveJsonToEnv(configPath)
 	}
 	err = godotenv.Overload(envPath)
 	if err != nil {
