@@ -51,8 +51,8 @@ func GetSize() fyne.Size {
 
 func GetScreenSize() fyne.Size {
 	bounds := screenshot.GetDisplayBounds(0)
-	width := bounds.Dx()
-	height := bounds.Dy()
+	width := bounds.Dx() - 150
+	height := bounds.Dy() - 150
 
 	return fyne.NewSize(float32(width), float32(height))
 }
