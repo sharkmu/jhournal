@@ -83,8 +83,6 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 		sizeEntryH,
 	)
 
-	sizeEmptySpace := widget.NewLabel("")
-
 	sizeSaveBtn := widget.NewButton("Save", func() {
 
 		sizeWf64, err := strconv.ParseFloat(sizeEntryW.Text, 32)
@@ -137,7 +135,7 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 			warningText.Refresh()
 		}
 	})
-	sizeEntries := container.NewHBox(sizeLabelW, sizeEntryWContainer, sizeLabelH, sizeEntryHContainer, sizeEmptySpace, sizeSaveBtn)
+	sizeEntries := container.NewHBox(sizeLabelW, sizeEntryWContainer, sizeLabelH, sizeEntryHContainer, sizeSaveBtn)
 
 	sizeBox := container.NewVBox(sizeLabel, warningText, sizeEntries)
 
