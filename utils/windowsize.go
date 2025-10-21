@@ -8,6 +8,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"github.com/joho/godotenv"
+	"github.com/kbinani/screenshot"
 )
 
 func GetSize() fyne.Size {
@@ -46,4 +47,12 @@ func GetSize() fyne.Size {
 	}
 
 	return fyne.NewSize(float32(sizeWf64), float32(sizeHf64))
+}
+
+func GetScreenSize() fyne.Size {
+	bounds := screenshot.GetDisplayBounds(0)
+	width := bounds.Dx()
+	height := bounds.Dy()
+
+	return fyne.NewSize(float32(width), float32(height))
 }
