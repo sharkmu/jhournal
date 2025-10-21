@@ -2,15 +2,11 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 
-	"github.com/joho/godotenv"
 	"github.com/sharkmu/jhournal/tabs"
 	"github.com/sharkmu/jhournal/utils"
 )
@@ -23,50 +19,12 @@ func main() {
 
 	w.Show()
 
-	wSize := getSize()
+	wSize := utils.GetSize()
 	w.Resize(wSize)
 
 	createTabs(w)
 
 	a.Run()
-}
-
-func getSize() fyne.Size {
-	configPath, err := utils.GetConfigDir()
-	if err != nil {
-		utils.DisplayError(fmt.Errorf("unable to get config directory: %w", err))
-	}
-	envPath := filepath.Join(configPath, ".env")
-
-	_, err = os.Stat(envPath)
-	if os.IsNotExist(err) {
-		utils.SaveJsonToEnv(configPath)
-	}
-	err = godotenv.Overload(envPath)
-	if err != nil {
-		utils.DisplayError(fmt.Errorf("error loading .env file: %w", err))
-	}
-
-	sizeW := os.Getenv("WINDOW_SIZE_W")
-	sizeH := os.Getenv("WINDOW_SIZE_H")
-	if sizeW == "" {
-		sizeW = "800"
-	}
-	if sizeH == "" {
-		sizeH = "600"
-	}
-
-	sizeWf64, err := strconv.ParseFloat(sizeW, 32)
-	if err != nil {
-		utils.DisplayError(fmt.Errorf("error: %w", err))
-	}
-
-	sizeHf64, err := strconv.ParseFloat(sizeH, 32)
-	if err != nil {
-		utils.DisplayError(fmt.Errorf("error: %w", err))
-	}
-
-	return fyne.NewSize(float32(sizeWf64), float32(sizeHf64))
 }
 
 func createTabs(w fyne.Window) {
