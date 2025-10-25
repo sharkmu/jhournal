@@ -57,10 +57,11 @@ func TestSaveSizeToEnv(t *testing.T) {
 		t.Fatalf("Unable to get config dir: %v", err)
 	}
 
-	testHeight := "600"
 	testWidth := "800"
+	testHeight := "600"
 
-	utils.SaveSizeToEnv(testHeight, testWidth)
+	utils.SaveWidthToEnv(testWidth)
+	utils.SaveHeightToEnv(testHeight)
 
 	envPath := filepath.Join(configDir, ".env")
 	if _, err := os.Stat(envPath); os.IsNotExist(err) {

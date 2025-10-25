@@ -48,9 +48,14 @@ func SaveJsonToEnv(folderpath string) error {
 	return nil
 }
 
-func SaveSizeToEnv(sizeW, sizeH string) {
+func SaveWidthToEnv(sizeW string) {
 	SaveEnvValues(map[string]string{
 		"WINDOW_SIZE_W": sizeW,
+	})
+}
+
+func SaveHeightToEnv(sizeH string) {
+	SaveEnvValues(map[string]string{
 		"WINDOW_SIZE_H": sizeH,
 	})
 }

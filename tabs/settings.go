@@ -67,7 +67,8 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 
 	sizeLabel := widget.NewLabel("Window's size")
 
-	warningText := canvas.NewText("", color.RGBA{R: 255, G: 0, B: 0, A: 255})
+	warningTextWidth := canvas.NewText("", color.RGBA{R: 255, G: 0, B: 0, A: 255})
+	warningTextHeight := canvas.NewText("", color.RGBA{R: 255, G: 0, B: 0, A: 255})
 
 	sizeLabelW := widget.NewLabel("Width:")
 	sizeEntryW := widget.NewEntry()
@@ -84,60 +85,72 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 	)
 
 	sizeSaveBtn := widget.NewButton("Save", func() {
+		warningStatusW := false
+		warningStatusH := false
 
 		sizeWf64, err := strconv.ParseFloat(sizeEntryW.Text, 32)
 		if err != nil {
-			utils.DisplayError(fmt.Errorf("error: %w", err))
+			if sizeEntryW.Text == "" {
+				sizeWf64 = 0
+			} else {
+				utils.DisplayError(fmt.Errorf("error: %w", err))
+			}
 		}
 
 		sizeHf64, err := strconv.ParseFloat(sizeEntryH.Text, 32)
 		if err != nil {
-			utils.DisplayError(fmt.Errorf("error: %w", err))
+			if sizeEntryH.Text == "" {
+				sizeHf64 = 0
+			} else {
+				utils.DisplayError(fmt.Errorf("error: %w", err))
+			}
 		}
 
-		warningStatusW := false
-		warningStatusH := false
+		clearWarning := func(option string) {
+			switch option {
+			case "width":
+				warningTextWidth.Text = ""
+				warningTextWidth.Refresh()
+			case "height":
+				warningTextHeight.Text = ""
+				warningTextHeight.Refresh()
+			}
+		}
 
 		screenWidth := float64(utils.GetScreenSize().Width)
 		screenHeight := float64(utils.GetScreenSize().Height)
 
 		if sizeWf64 < 300 || sizeWf64 > screenWidth {
-			if warningStatusH {
-				warningText.Text = fmt.Sprintf(
-					"  Incorrect value for width (min: 300, max: %v) and height (min: 220, max: %v)",
-					screenWidth, screenHeight,
-				)
-			} else {
-				warningText.Text = fmt.Sprintf(
-					"  Incorrect value for width (min: 300, max: %v)",
-					screenWidth,
-				)
-			}
+			warningTextWidth.Text = fmt.Sprintf(
+				"  Incorrect value for width (min: 300, max: %v)",
+				screenWidth,
+			)
+			warningTextWidth.Refresh()
 			warningStatusW = true
-		} else if sizeHf64 < 220 || sizeHf64 > screenHeight {
-			if warningStatusW {
-				warningText.Text = fmt.Sprintf(
-					"  Incorrect value for width (min: 300, max: %v) and height (min: 220, max: %v)",
-					screenWidth, screenHeight,
-				)
-			} else {
-				warningText.Text = fmt.Sprintf(
-					"  Incorrect value for height (min: 220, max: %v)",
-					screenHeight,
-				)
-			}
-			warningStatusH = true
-		} else {
-			utils.SaveSizeToEnv(strconv.FormatFloat(sizeWf64, 'f', -1, 64), strconv.FormatFloat(sizeHf64, 'f', -1, 64))
-			w.Resize(fyne.NewSize(float32(sizeWf64), float32(sizeHf64)))
-
-			warningText.Text = ""
-			warningText.Refresh()
 		}
+
+		if sizeHf64 < 220 || sizeHf64 > screenHeight {
+			warningTextHeight.Text = fmt.Sprintf(
+				"  Incorrect value for height (min: 220, max: %v)",
+				screenHeight,
+			)
+			warningTextHeight.Refresh()
+			warningStatusH = true
+		}
+
+		if !warningStatusW {
+			utils.SaveWidthToEnv(strconv.FormatFloat(sizeWf64, 'f', -1, 64))
+			clearWarning("width")
+		}
+		if !warningStatusH {
+			utils.SaveHeightToEnv(strconv.FormatFloat(sizeHf64, 'f', -1, 64))
+			clearWarning("height")
+		}
+
 	})
 	sizeEntries := container.NewHBox(sizeLabelW, sizeEntryWContainer, sizeLabelH, sizeEntryHContainer, sizeSaveBtn)
 
-	sizeBox := container.NewVBox(sizeLabel, warningText, sizeEntries)
+	sizeBox := container.NewVBox(sizeLabel, sizeEntries, warningTextWidth, warningTextHeight)
 
 	return container.NewVBox(title, pathBox, sizeBox)
 }
