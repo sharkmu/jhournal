@@ -45,7 +45,10 @@ func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 
 	button := widget.NewButton("Save", func() {
 		if entry.Text != "" {
-			d, jsonPath := utils.ReadJson()
+			d, jsonPath, err := utils.ReadJson()
+			if err != nil {
+				utils.DisplayError(fmt.Errorf("unable to read JSON file: %v", err))
+			}
 			if len(d) > 0 {
 				lastDate := d[len(d)-1].Time
 				sinceLastDate := time.Since(lastDate)

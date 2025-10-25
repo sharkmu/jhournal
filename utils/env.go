@@ -8,12 +8,12 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func SaveEnvValues(updates map[string]string) {
+func SaveEnvValues(updates map[string]string) error {
 	configPath, err := GetConfigDir()
 	envPath := filepath.Join(configPath, ".env")
 
 	if err != nil {
-		DisplayError(fmt.Errorf("unable to get config directory: %w", err))
+		return DisplayError(fmt.Errorf("unable to get config directory: %w", err))
 	}
 
 	_, err = os.Stat(envPath)
@@ -21,15 +21,15 @@ func SaveEnvValues(updates map[string]string) {
 	if os.IsNotExist(err) {
 		err := os.WriteFile(envPath, []byte(""), 0644)
 		if err != nil {
-			DisplayError(fmt.Errorf("failed to create .env: %w", err))
+			return DisplayError(fmt.Errorf("failed to create .env: %w", err))
 		}
 		existing = make(map[string]string)
 	} else if err != nil {
-		DisplayError(fmt.Errorf("unable to get data on .env: %w", err))
+		return DisplayError(fmt.Errorf("unable to get data on .env: %w", err))
 	} else {
 		existing, err = godotenv.Read(envPath)
 		if err != nil {
-			DisplayError(fmt.Errorf("can't read existing .env file: %w", err))
+			return DisplayError(fmt.Errorf("can't read existing .env file: %w", err))
 		}
 	}
 
@@ -39,23 +39,32 @@ func SaveEnvValues(updates map[string]string) {
 
 	err = godotenv.Write(existing, envPath)
 	if err != nil {
-		DisplayError(fmt.Errorf("unable to write .env: %w", err))
+		return DisplayError(fmt.Errorf("unable to write .env: %w", err))
 	}
-}
 
-func SaveJsonToEnv(folderpath string) error {
-	SaveEnvValues(map[string]string{"JSON_FOLDER_PATH": folderpath})
 	return nil
 }
 
-func SaveWidthToEnv(sizeW string) {
-	SaveEnvValues(map[string]string{
-		"WINDOW_SIZE_W": sizeW,
-	})
+func SaveJsonToEnv(folderpath string) error {
+	err := SaveEnvValues(map[string]string{"JSON_FOLDER_PATH": folderpath})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func SaveHeightToEnv(sizeH string) {
-	SaveEnvValues(map[string]string{
-		"WINDOW_SIZE_H": sizeH,
-	})
+func SaveWidthToEnv(sizeW string) error {
+	err := SaveEnvValues(map[string]string{"WINDOW_SIZE_W": sizeW})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func SaveHeightToEnv(sizeH string) error {
+	err := SaveEnvValues(map[string]string{"WINDOW_SIZE_H": sizeH})
+	if err != nil {
+		return err
+	}
+	return nil
 }
