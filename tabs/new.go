@@ -18,7 +18,7 @@ type Data struct {
 	Time    time.Time
 }
 
-func NewEntry(onSaved func()) fyne.CanvasObject {
+func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 	title := widget.NewLabelWithStyle("New Entry", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 
 	warning1 := canvas.NewText("", color.RGBA{R: 255, G: 0, B: 0, A: 255})
@@ -45,7 +45,10 @@ func NewEntry(onSaved func()) fyne.CanvasObject {
 
 	button := widget.NewButton("Save", func() {
 		if entry.Text != "" {
-			d, jsonPath := utils.ReadJson()
+			d, jsonPath, err := utils.ReadJson()
+			if err != nil {
+				utils.DisplayError(fmt.Errorf("unable to read JSON file: %v", err))
+			}
 			if len(d) > 0 {
 				lastDate := d[len(d)-1].Time
 				sinceLastDate := time.Since(lastDate)
@@ -64,12 +67,13 @@ func NewEntry(onSaved func()) fyne.CanvasObject {
 					)
 					warning2.Refresh()
 					warning2Status = true
+					return
 				}
 			} else {
 				utils.WriteJson(d, jsonPath, entry.Text)
 				clearWarnings()
 			}
-			onSaved()
+			onSaved("view")
 		}
 	})
 

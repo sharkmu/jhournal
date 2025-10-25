@@ -11,14 +11,20 @@ import (
 
 func ViewEntries() fyne.CanvasObject {
 	var content fyne.CanvasObject
-
-	if utils.LenJson() > 0 {
-		entries, _ := utils.ReadJson()
+	jsonLength, err := utils.LenJson()
+	if err != nil {
+		utils.DisplayError(fmt.Errorf("unable to get the length of the JSON file: %w", err))
+	}
+	if jsonLength > 0 {
+		entries, _, err := utils.ReadJson()
+		if err != nil {
+			utils.DisplayError(fmt.Errorf("unable to read JSON file: %w", err))
+		}
 
 		display := widget.NewLabel("Choose an entry from the list")
 
 		listWidget := widget.NewList(
-			func() int { return utils.LenJson() },
+			func() int { return jsonLength },
 			func() fyne.CanvasObject { return widget.NewLabel("") },
 			func(i widget.ListItemID, o fyne.CanvasObject) {
 				d := entries[i]
