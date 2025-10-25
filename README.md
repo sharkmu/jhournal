@@ -28,7 +28,7 @@
 It is written entirely in [Go](https://go.dev/) with [Fyne](https://fyne.io/), a cross-platform GUI toolkit.
 
 ## Features
-> Note: This project is still a ***WIP***, so some features may not work properly or at all.
+> Note: This project is still a ***WIP***, so you might come across some errors. In such case please [create an issue](https://github.com/sharkmu/jhournal/issues/new) about it
 
 There are 3 tabs on the left side of the window.
 1. **New entry** - Create a new journal entry.
@@ -40,12 +40,16 @@ There are 3 tabs on the left side of the window.
 Feel free to contribute to the project. Be aware that this is a beginner project, so the code may sometimes be slightly harder to read. You can also collaborate by making an issue or giving feedback. Or even just by editing this README.md and making a PR.
 
 ## Installation
+### Manually
 - Clone the repository with [git](https://git-scm.com/): `git clone https://github.com/sharkmu/jhournal.git`
 - Make sure that you have [Go](https://go.dev/) installed
 - Go to the repository's folder: `cd jhournal`
 - Install the necessary packages: `go mod tidy`
 - To run the repository: `go run .`
 - To build the repository: `go build`, if this doesn't work on Windows, then instead try running: `go build -ldflags="-s -w -H=windowsgui" -o jhournal.exe .`
+
+### Download from [Releases](https://github.com/sharkmu/jhournal/releases)
+You can download the binary file for Jhournal from the latest release in the [Releases](https://github.com/sharkmu/jhournal/releases) tab
 
 
 ## About the name
