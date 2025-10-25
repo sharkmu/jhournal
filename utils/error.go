@@ -5,13 +5,16 @@ import (
 	"fyne.io/fyne/v2/dialog"
 )
 
-func DisplayError(err error) error {
-	var w fyne.Window
-	windows := fyne.CurrentApp().Driver().AllWindows()
-	if len(windows) > 0 {
-		w = windows[0]
-	}
+var ShowErrorDialog = true
 
-	dialog.ShowError(err, w)
+func DisplayError(err error) error {
+	if ShowErrorDialog {
+		var w fyne.Window
+		windows := fyne.CurrentApp().Driver().AllWindows()
+		if len(windows) > 0 {
+			w = windows[0]
+		}
+		dialog.ShowError(err, w)
+	}
 	return err
 }
