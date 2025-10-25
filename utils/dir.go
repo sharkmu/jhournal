@@ -9,10 +9,13 @@ import (
 func GetConfigDir() (string, error) {
 	configRoot, err := os.UserConfigDir()
 	if err != nil {
-		DisplayError(fmt.Errorf("unable to get user config directory: %w", err))
+		return "", DisplayError(fmt.Errorf("unable to get user config directory: %w", err))
 	}
 
 	configDir := filepath.Join(configRoot, "jhournal")
-	os.MkdirAll(configDir, 0755)
+	err = os.MkdirAll(configDir, 0755)
+	if err != nil {
+		return "", DisplayError(fmt.Errorf("unable to create config directory: %w", err))
+	}
 	return configDir, nil
 }
