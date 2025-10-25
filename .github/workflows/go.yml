@@ -30,6 +30,4 @@ jobs:
         sudo apt-get install -y libgl1-mesa-dev xorg-dev libglu1-mesa-dev mesa-common-dev pkg-config
 
     - name: Test
-      run: | 
-        go test -v ./...
-        go test utils\utils_test.go -v
+      run: go test -v ./...
