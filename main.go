@@ -15,12 +15,12 @@ func main() {
 	a := app.NewWithID("com.sharkmu.jhournal")
 	w := a.NewWindow("Jhournal")
 
+	wSize := utils.GetSize()
+	w.Resize(wSize)
+
 	w.CenterOnScreen()
 
 	w.Show()
-
-	wSize := utils.GetSize()
-	w.Resize(wSize)
 
 	createTabs(w)
 
