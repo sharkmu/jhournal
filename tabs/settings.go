@@ -45,8 +45,12 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 	}
 
 	saveBtn := widget.NewButton("Save", func() {
-		utils.SaveJsonToEnv(pathEntry.Text)
-		onSaved("view")
+		if filepath.IsAbs(pathEntry.Text) {
+			utils.SaveJsonToEnv(pathEntry.Text)
+			onSaved("view")
+		} else {
+			utils.DisplayError(fmt.Errorf("%s is not a valid path", pathEntry.Text))
+		}
 	})
 
 	pathInput := container.NewBorder(nil, nil, nil, saveBtn, pathEntry)
