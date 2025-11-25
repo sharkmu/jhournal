@@ -19,7 +19,7 @@ type Data struct {
 func ReadJson() ([]Data, string, error) {
 	configPath, err := GetConfigDir()
 	if err != nil {
-		return nil, "", DisplayError(fmt.Errorf("unable to get config directory: %w", err))
+		return nil, "", fmt.Errorf("unable to get config directory: %w", err)
 	}
 	envPath := filepath.Join(configPath, ".env")
 
@@ -27,12 +27,12 @@ func ReadJson() ([]Data, string, error) {
 	if os.IsNotExist(err) {
 		err = SaveJsonToEnv(configPath)
 		if err != nil {
-			return nil, "", DisplayError(fmt.Errorf("failed to save JSON to env: %w", err))
+			return nil, "", fmt.Errorf("failed to save JSON to env: %w", err)
 		}
 	}
 	err = godotenv.Overload(envPath)
 	if err != nil {
-		return nil, "", DisplayError(fmt.Errorf("error loading .env file: %w", err))
+		return nil, "", fmt.Errorf("error loading .env file: %w", err)
 	}
 
 	jsonPath := filepath.Join(os.Getenv("JSON_FOLDER_PATH"), "data.json")
@@ -42,18 +42,18 @@ func ReadJson() ([]Data, string, error) {
 		if os.IsNotExist(err) {
 			file, createErr := os.Create(jsonPath)
 			if createErr != nil {
-				return nil, "", DisplayError(fmt.Errorf("error creating JSON file: %w", err))
+				return nil, "", fmt.Errorf("error creating JSON file: %w", err)
 			}
 			defer file.Close()
 
 			_, writeErr := file.Write([]byte("[]"))
 			if writeErr != nil {
-				return nil, "", DisplayError(fmt.Errorf("error initialising JSON content: %w", err))
+				return nil, "", fmt.Errorf("error initialising JSON content: %w", err)
 			}
 
 			fileData = []byte("[]")
 		} else {
-			return nil, "", DisplayError(fmt.Errorf("unable to read JSON file: %w", err))
+			return nil, "", fmt.Errorf("unable to read JSON file: %w", err)
 		}
 	}
 
@@ -61,7 +61,7 @@ func ReadJson() ([]Data, string, error) {
 	if len(fileData) > 0 {
 		err = json.Unmarshal(fileData, &d)
 		if err != nil {
-			return nil, "", DisplayError(fmt.Errorf("error parsing JSON: %w", err))
+			return nil, "", fmt.Errorf("error parsing JSON: %w", err)
 		}
 	}
 	return d, jsonPath, nil
@@ -78,12 +78,12 @@ func WriteJson(d []Data, jsonPath string, text string) error {
 
 	b, err := json.MarshalIndent(d, "", "  ")
 	if err != nil {
-		return DisplayError(fmt.Errorf("unable to marshal new data: %w", err))
+		return fmt.Errorf("unable to marshal new data: %w", err)
 	}
 
 	err = os.WriteFile(jsonPath, b, 0644)
 	if err != nil {
-		return DisplayError(fmt.Errorf("unable to write JSON file: %w", err))
+		return fmt.Errorf("unable to write JSON file: %w", err)
 	}
 
 	return nil
@@ -92,7 +92,7 @@ func WriteJson(d []Data, jsonPath string, text string) error {
 func LenJson() (int, error) {
 	d, _, err := ReadJson()
 	if err != nil {
-		return 0, DisplayError(fmt.Errorf("failed to read JSON: %w", err))
+		return 0, fmt.Errorf("failed to read JSON: %w", err)
 	}
 	return len(d), nil
 }

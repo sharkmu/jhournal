@@ -7,7 +7,7 @@ import (
 
 var ShowErrorDialog = true
 
-func DisplayError(err error) error {
+func DisplayError(err error) {
 	if ShowErrorDialog {
 		var w fyne.Window
 		windows := fyne.CurrentApp().Driver().AllWindows()
@@ -16,5 +16,4 @@ func DisplayError(err error) error {
 		}
 		dialog.ShowError(err, w)
 	}
-	return err
 }
