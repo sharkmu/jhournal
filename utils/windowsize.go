@@ -20,7 +20,10 @@ func GetSize() fyne.Size {
 
 	_, err = os.Stat(envPath)
 	if os.IsNotExist(err) {
-		SaveJsonToEnv(configPath)
+		err = SaveJsonToEnv(configPath)
+		if err != nil {
+			DisplayError(err)
+		}
 	}
 	err = godotenv.Overload(envPath)
 	if err != nil {

@@ -44,11 +44,14 @@ func ReadJson() ([]Data, string, error) {
 			if createErr != nil {
 				return nil, "", fmt.Errorf("error creating JSON file: %w", err)
 			}
-			defer file.Close()
 
 			_, writeErr := file.Write([]byte("[]"))
 			if writeErr != nil {
 				return nil, "", fmt.Errorf("error initialising JSON content: %w", err)
+			}
+			err = file.Close()
+			if err != nil {
+				return nil, "", (fmt.Errorf("unable to close file: %w", err))
 			}
 
 			fileData = []byte("[]")

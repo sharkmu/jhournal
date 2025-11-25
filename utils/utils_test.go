@@ -75,7 +75,6 @@ func TestReadJson(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create test directory: %v", err)
 	}
-	defer os.RemoveAll(testDir)
 
 	err = utils.SaveJsonToEnv(testDir)
 	if err != nil {
@@ -114,6 +113,11 @@ func TestReadJson(t *testing.T) {
 	if returnedPath != jsonPath {
 		t.Errorf("Expected path '%s', got '%s'", jsonPath, returnedPath)
 	}
+
+	err = os.RemoveAll(testDir)
+	if err != nil {
+		t.Errorf("Unable to remove test directory: %s", err)
+	}
 }
 
 func TestWriteJson(t *testing.T) {
@@ -127,7 +131,6 @@ func TestWriteJson(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create test directory: %v", err)
 	}
-	defer os.RemoveAll(testDir)
 
 	jsonPath := filepath.Join(testDir, "data.json")
 
@@ -164,6 +167,11 @@ func TestWriteJson(t *testing.T) {
 	if resultData[1].Id != 2 {
 		t.Errorf("Expected ID 2, got %d", resultData[1].Id)
 	}
+
+	err = os.RemoveAll(testDir)
+	if err != nil {
+		t.Errorf("Unable to remove test directory: %s", err)
+	}
 }
 
 func TestLenJson(t *testing.T) {
@@ -177,7 +185,6 @@ func TestLenJson(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create test directory: %v", err)
 	}
-	defer os.RemoveAll(testDir)
 
 	err = utils.SaveJsonToEnv(testDir)
 	if err != nil {
@@ -208,5 +215,10 @@ func TestLenJson(t *testing.T) {
 
 	if length != 3 {
 		t.Errorf("Expected length 3, got %d", length)
+	}
+
+	err = os.RemoveAll(testDir)
+	if err != nil {
+		t.Errorf("Unable to remove test directory: %s", err)
 	}
 }

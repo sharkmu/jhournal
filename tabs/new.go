@@ -54,7 +54,10 @@ func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 				sinceLastDate := time.Since(lastDate)
 
 				if sinceLastDate >= time.Hour {
-					utils.WriteJson(d, jsonPath, entry.Text)
+					err = utils.WriteJson(d, jsonPath, entry.Text)
+					if err != nil {
+						utils.DisplayError(err)
+					}
 					clearWarnings()
 				} else {
 					elapsed := sinceLastDate
@@ -70,7 +73,10 @@ func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 					return
 				}
 			} else {
-				utils.WriteJson(d, jsonPath, entry.Text)
+				err = utils.WriteJson(d, jsonPath, entry.Text)
+				if err != nil {
+					utils.DisplayError(err)
+				}
 				clearWarnings()
 			}
 			onSaved("view")

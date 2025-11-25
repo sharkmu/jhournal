@@ -46,7 +46,10 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 
 	saveBtn := widget.NewButton("Save", func() {
 		if filepath.IsAbs(pathEntry.Text) {
-			utils.SaveJsonToEnv(pathEntry.Text)
+			err = utils.SaveJsonToEnv(pathEntry.Text)
+			if err != nil {
+				utils.DisplayError(err)
+			}
 			onSaved("view")
 		} else {
 			utils.DisplayError(fmt.Errorf("%s is not a valid path", pathEntry.Text))
@@ -60,7 +63,10 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 			if r == nil {
 				return
 			}
-			utils.SaveJsonToEnv(r.Path())
+			envError := utils.SaveJsonToEnv(r.Path())
+			if envError != nil {
+				utils.DisplayError(err)
+			}
 			pathEntry.SetText(r.Path())
 			onSaved("view")
 		}, w)
@@ -143,11 +149,17 @@ func OpenSettings(w fyne.Window, onSaved func(string)) fyne.CanvasObject {
 		}
 
 		if !warningStatusW {
-			utils.SaveWidthToEnv(strconv.FormatFloat(sizeWf64, 'f', -1, 64))
+			err = utils.SaveWidthToEnv(strconv.FormatFloat(sizeWf64, 'f', -1, 64))
+			if err != nil {
+				utils.DisplayError(err)
+			}
 			clearWarning("width")
 		}
 		if !warningStatusH {
-			utils.SaveHeightToEnv(strconv.FormatFloat(sizeHf64, 'f', -1, 64))
+			err = utils.SaveHeightToEnv(strconv.FormatFloat(sizeHf64, 'f', -1, 64))
+			if err != nil {
+				utils.DisplayError(err)
+			}
 			clearWarning("height")
 		}
 
