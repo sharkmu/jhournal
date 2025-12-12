@@ -10,6 +10,11 @@ import (
 	"github.com/sharkmu/jhournal/utils"
 )
 
+var CONFIG_DIR_ERR = "Unable to get config dir: %v"
+var CREATE_TEST_DIR_ERR = "Failed to create test directory: %v"
+var REMOVE_TEST_DIR_ERR = "Unable to remove test directory: %s"
+var JSON_FILE_NAME = "data.json"
+
 func init() {
 	utils.ShowErrorDialog = false
 }
@@ -17,14 +22,14 @@ func init() {
 func TestGetConfigDir(t *testing.T) {
 	_, err := utils.GetConfigDir()
 	if err != nil {
-		t.Fatalf("Unable to get config dir: %v", err)
+		t.Fatalf(CONFIG_DIR_ERR, err)
 	}
 }
 
 func TestSaveJsonToEnv(t *testing.T) {
 	configDir, err := utils.GetConfigDir()
 	if err != nil {
-		t.Fatalf("Unable to get config dir: %v", err)
+		t.Fatalf(CONFIG_DIR_ERR, err)
 	}
 
 	testPath := filepath.Join(configDir, "test_folder")
@@ -42,7 +47,7 @@ func TestSaveJsonToEnv(t *testing.T) {
 func TestSaveSizeToEnv(t *testing.T) {
 	configDir, err := utils.GetConfigDir()
 	if err != nil {
-		t.Fatalf("Unable to get config dir: %v", err)
+		t.Fatalf(CONFIG_DIR_ERR, err)
 	}
 
 	testWidth := "800"
@@ -67,13 +72,13 @@ func TestSaveSizeToEnv(t *testing.T) {
 func TestReadJson(t *testing.T) {
 	configDir, err := utils.GetConfigDir()
 	if err != nil {
-		t.Fatalf("Unable to get config dir: %v", err)
+		t.Fatalf(CONFIG_DIR_ERR, err)
 	}
 
 	testDir := filepath.Join(configDir, "test_data")
 	err = os.MkdirAll(testDir, 0755)
 	if err != nil {
-		t.Fatalf("Failed to create test directory: %v", err)
+		t.Fatalf(CREATE_TEST_DIR_ERR, err)
 	}
 
 	err = utils.SaveJsonToEnv(testDir)
@@ -81,7 +86,7 @@ func TestReadJson(t *testing.T) {
 		t.Fatalf("Failed to save JSON path to env: %v", err)
 	}
 
-	jsonPath := filepath.Join(testDir, "data.json")
+	jsonPath := filepath.Join(testDir, JSON_FILE_NAME)
 	testData := []utils.Data{
 		{Id: 1, Content: "Test entry 1", Time: time.Now()},
 		{Id: 2, Content: "Test entry 2", Time: time.Now()},
@@ -116,23 +121,23 @@ func TestReadJson(t *testing.T) {
 
 	err = os.RemoveAll(testDir)
 	if err != nil {
-		t.Errorf("Unable to remove test directory: %s", err)
+		t.Errorf(REMOVE_TEST_DIR_ERR, err)
 	}
 }
 
 func TestWriteJson(t *testing.T) {
 	configDir, err := utils.GetConfigDir()
 	if err != nil {
-		t.Fatalf("Unable to get config dir: %v", err)
+		t.Fatalf(CONFIG_DIR_ERR, err)
 	}
 
 	testDir := filepath.Join(configDir, "test_write")
 	err = os.MkdirAll(testDir, 0755)
 	if err != nil {
-		t.Fatalf("Failed to create test directory: %v", err)
+		t.Fatalf(CREATE_TEST_DIR_ERR, err)
 	}
 
-	jsonPath := filepath.Join(testDir, "data.json")
+	jsonPath := filepath.Join(testDir, JSON_FILE_NAME)
 
 	initialData := []utils.Data{
 		{Id: 1, Content: "First entry", Time: time.Now()},
@@ -170,20 +175,20 @@ func TestWriteJson(t *testing.T) {
 
 	err = os.RemoveAll(testDir)
 	if err != nil {
-		t.Errorf("Unable to remove test directory: %s", err)
+		t.Errorf(REMOVE_TEST_DIR_ERR, err)
 	}
 }
 
 func TestLenJson(t *testing.T) {
 	configDir, err := utils.GetConfigDir()
 	if err != nil {
-		t.Fatalf("Unable to get config dir: %v", err)
+		t.Fatalf(CONFIG_DIR_ERR, err)
 	}
 
 	testDir := filepath.Join(configDir, "test_len")
 	err = os.MkdirAll(testDir, 0755)
 	if err != nil {
-		t.Fatalf("Failed to create test directory: %v", err)
+		t.Fatalf(CREATE_TEST_DIR_ERR, err)
 	}
 
 	err = utils.SaveJsonToEnv(testDir)
@@ -191,7 +196,7 @@ func TestLenJson(t *testing.T) {
 		t.Fatalf("Failed to save json path to env: %v", err)
 	}
 
-	jsonPath := filepath.Join(testDir, "data.json")
+	jsonPath := filepath.Join(testDir, JSON_FILE_NAME)
 	testData := []utils.Data{
 		{Id: 1, Content: "Entry 1", Time: time.Now()},
 		{Id: 2, Content: "Entry 2", Time: time.Now()},
@@ -219,6 +224,6 @@ func TestLenJson(t *testing.T) {
 
 	err = os.RemoveAll(testDir)
 	if err != nil {
-		t.Errorf("Unable to remove test directory: %s", err)
+		t.Errorf(REMOVE_TEST_DIR_ERR, err)
 	}
 }
