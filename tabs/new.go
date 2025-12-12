@@ -30,7 +30,6 @@ func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 	entry.SetPlaceHolder("Write here")
 
 	clearWarnings := func() {
-		entry.SetText("")
 		if warning1Status {
 			warning1.Text = ""
 			warning1.Refresh()
@@ -46,19 +45,30 @@ func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 	button := widget.NewButton("Save", func() {
 		if entry.Text != "" {
 			d, jsonPath, err := utils.ReadJson()
+			fmt.Println(jsonPath)
 			if err != nil {
 				utils.DisplayError(fmt.Errorf("unable to read JSON file: %v", err))
 			}
-			if len(d) > 0 {
+
+			handleSavingFunc := func() {
+				err = utils.WriteJson(d, jsonPath, entry.Text)
+				if err != nil {
+					utils.DisplayError(err)
+				}
+				clearWarnings()
+				entry.Text = ""
+				entry.Refresh()
+				onSaved("view")
+			}
+
+			if len(d) == 0 {
+				handleSavingFunc()
+			} else {
 				lastDate := d[len(d)-1].Time
 				sinceLastDate := time.Since(lastDate)
 
 				if sinceLastDate >= time.Hour {
-					err = utils.WriteJson(d, jsonPath, entry.Text)
-					if err != nil {
-						utils.DisplayError(err)
-					}
-					clearWarnings()
+					handleSavingFunc()
 				} else {
 					elapsed := sinceLastDate
 					mins := int(elapsed.Minutes())
@@ -72,14 +82,7 @@ func NewEntry(onSaved func(tabName string)) fyne.CanvasObject {
 					warning2Status = true
 					return
 				}
-			} else {
-				err = utils.WriteJson(d, jsonPath, entry.Text)
-				if err != nil {
-					utils.DisplayError(err)
-				}
-				clearWarnings()
 			}
-			onSaved("view")
 		}
 	})
 
